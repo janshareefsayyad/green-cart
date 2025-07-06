@@ -19,7 +19,7 @@ await connectDB();
 await connectCloudinary();
 
 //Allow multiple Origins
-const allowedOrigins = ['http://localhost:5173','https://green-cart-five-liart.vercel.app','https://hoppscotch.io']
+const allowedOrigins = ['http://localhost:5173',process.env.CLIENT_ORIGIN];
 
 //Middleware Configuration
 app.use(express.json());
