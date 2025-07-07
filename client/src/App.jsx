@@ -18,6 +18,7 @@ import AddProduct from './pages/seller/AddProduct';
 import ProductList from './pages/seller/ProductList';
 import Orders from './pages/seller/Orders';
 import Loading from './components/Loading';
+import PageNotFound from './components/PageNotFound';
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller")
@@ -43,6 +44,7 @@ const App = () => {
             <Route path='product-list' element={isSeller?<ProductList/> : null}/>
             <Route path='orders' element={isSeller?<Orders/> : null}/>
           </Route>
+          <Route path='*' element ={<PageNotFound/>}/>
         </Routes>
       </div>
       {isSellerPath ? null : (<Footer/>)}

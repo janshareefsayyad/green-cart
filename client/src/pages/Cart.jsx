@@ -230,7 +230,6 @@ const Cart = () => {
                   onClick={() => {
                     if(!user){
                       toast.error("Please login to add address");
-                      navigate('/login');
                     }else{
                       navigate("/add-address");
                     }
