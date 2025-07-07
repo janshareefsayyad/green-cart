@@ -41,7 +41,7 @@ const Cart = () => {
         if(data.addresses.length > 0){
           setSelectedAdress(data.addresses[0]);
         }else{
-          //toast.error(data.message);
+          toast.error(data.message);
         }
       }
     } catch (error) {
@@ -227,7 +227,14 @@ const Cart = () => {
                   </p>
                 ))}
                 <p
-                  onClick={() => navigate("/add-address")}
+                  onClick={() => {
+                    if(!user){
+                      toast.error("Please login to add address");
+                      navigate('/login');
+                    }else{
+                      navigate("/add-address");
+                    }
+                    }}
                   className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10"
                 >
                   Add address
