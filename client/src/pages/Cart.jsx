@@ -41,7 +41,7 @@ const Cart = () => {
         if(data.addresses.length > 0){
           setSelectedAdress(data.addresses[0]);
         }else{
-          toast.error(data.message);
+          toast.error(data.message || "Please add the shipping address");
         }
       }
     } catch (error) {
