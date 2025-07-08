@@ -155,7 +155,7 @@ const NavBar = () => {
           </NavLink>
           {user && (
             <NavLink
-              to="/orders"
+              to="/my-orders"
               className="block"
               onClick={() => setOpen(false)}
             >
