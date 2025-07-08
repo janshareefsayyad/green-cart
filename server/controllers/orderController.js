@@ -1,4 +1,4 @@
-fimport User from "../models/User.js"
+import User from "../models/User.js"
 import Order from "../models/Order.js"
 import Product from "../models/Product.js"
 import stripe from 'stripe';    
@@ -82,7 +82,7 @@ export const placeOrderStripe = async(req,res) =>{
         const line_items = productData.map((item)=>{
             return {
                 price_data: {
-                    currency :'usd',
+                    currency :'inr',
                     product_data:{
                         name : item.name,
                     },
