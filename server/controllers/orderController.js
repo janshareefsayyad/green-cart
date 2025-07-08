@@ -82,7 +82,7 @@ export const placeOrderStripe = async(req,res) =>{
         const line_items = productData.map((item)=>{
             return {
                 price_data: {
-                    currency :'inr',
+                    currency :'usd',
                     product_data:{
                         name : item.name,
                     },
