@@ -102,6 +102,13 @@ export const placeOrderStripe = async(req,res) =>{
                 userId,
             }
         })
+        try {
+                await Order.findByIdAndUpdate(orderId, { isPaid: true });
+
+                await User.findByIdAndUpdate(userId, { cartItems: {} });
+            } catch (error) {
+                console.error("Webhook DB Update Error:", error.message);
+            }
 
         return res.json({success:true,url:session.url});
     } catch (error) {
