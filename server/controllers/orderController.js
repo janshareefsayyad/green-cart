@@ -160,7 +160,7 @@ export const stripeWebHooks = async(req,res) =>{
             await User.findByIdAndUpdate(userId,{cartItems:{}})
             break;
         }
-        case "payment_intent.failed":{
+        case "payment_intent.payment_failed":{
             const paymentIntenet = event.data.object;
             const paymentIntenetId = paymentIntenet.id;
 
