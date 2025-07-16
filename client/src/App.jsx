@@ -44,7 +44,7 @@ const App = () => {
             <Route path='product-list' element={isSeller?<ProductList/> : null}/>
             <Route path='orders' element={isSeller?<Orders/> : null}/>
           </Route>
-          {/* <Route path='*' element ={<PageNotFound/>}/> */}
+          <Route path='*' element ={<PageNotFound/>}/>
         </Routes>
       </div>
       {isSellerPath ? null : (<Footer/>)}

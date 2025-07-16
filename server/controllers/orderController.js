@@ -180,7 +180,7 @@ export const stripeWebHooks = async(req,res) =>{
         }
          
     }
-    response.json({received:true});  
+    res.json({received:true});  
 
 }
 
