@@ -34,10 +34,6 @@ const Cart = () => {
   };
 
   const getUserAddress =async()=>{
-    if(!user){
-        toast.error("Please login First");
-      return;
-      }
     try {
       const {data} = await axios.get('/api/address/get');
       if(data.success){
@@ -45,7 +41,7 @@ const Cart = () => {
         if(data.addresses.length > 0){
           setSelectedAdress(data.addresses[0]);
         }else{
-          toast.error("Please add the Delivery address");
+          toast.error(data.message);
         }
       }
     } catch (error) {
