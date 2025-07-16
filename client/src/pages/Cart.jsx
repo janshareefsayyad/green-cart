@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { assets, dummyAddress } from "../assets/assets";
+import { assets} from "../assets/assets";
 import toast from "react-hot-toast";
 
 const Cart = () => {
@@ -214,7 +214,7 @@ const Cart = () => {
             </button>
             {showAddress && (
               <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-                {addresses.map((address, index) => (
+                {addresses.map((address) => (
                   <p
                     onClick={() => {
                       setShowAddress(false);
