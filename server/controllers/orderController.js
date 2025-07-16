@@ -112,10 +112,10 @@ export const placeOrderStripe = async(req,res) =>{
 
 //stripe  webhooks to verify payments action: /stripe
 
-export const stripeWebHooks = async(req, res) => {
+export const stripeWebHooks = async (req, res) => {
     const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
     const sig = req.headers['stripe-signature'];
-    
+
     let event;
     try {
         event = stripeInstance.webhooks.constructEvent(
@@ -128,68 +128,64 @@ export const stripeWebHooks = async(req, res) => {
         return res.status(400).send(`Webhook Error: ${error.message}`);
     }
 
-    // Only handle payment_intent.succeeded and payment_intent.failed
+    console.log(`Webhook Event Received: ${event.type}`);
+
     switch (event.type) {
-        case "payment_intent.succeeded": {
-            const paymentIntent = event.data.object;
-            const paymentIntentId = paymentIntent.id;
+
+        case "checkout.session.completed": {
+            const session = event.data.object;
+            const { orderId, userId } = session.metadata || {};
+
+            if (!orderId || !userId) {
+                console.error('Metadata missing in checkout.session.completed event');
+                break;
+            }
 
             try {
-                // Get the checkout session associated with this payment intent
-                const sessions = await stripeInstance.checkout.sessions.list({
-                    payment_intent: paymentIntentId,
-                    limit: 1
-                });
+                await Promise.all([
+                    Order.findByIdAndUpdate(orderId, { isPaid: true }),
+                    User.findByIdAndUpdate(userId, { cartItems: [] })
+                ]);
 
-                if (sessions.data.length > 0) {
-                    const { orderId, userId } = sessions.data[0].metadata;
-                    
-                    // Update order status and clear user's cart
-                    await Promise.all([
-                        Order.findByIdAndUpdate(orderId, { isPaid: true }),
-                        User.findByIdAndUpdate(userId, { $set: { cartItems: [] } })
-                    ]);
-                    
-                    console.log(`Success: Order ${orderId} marked as paid and cart cleared for user ${userId}`);
-                }
+                console.log(`✅ Order ${orderId} marked as paid. Cart cleared for user ${userId}.`);
             } catch (error) {
-                console.error("Payment intent succeeded processing error:", error.message);
-                // Consider implementing retry logic here
+                console.error(`❌ Error updating DB for checkout.session.completed:`, error.message);
             }
+
             break;
         }
-        
+
         case "payment_intent.failed": {
             const paymentIntent = event.data.object;
             const paymentIntentId = paymentIntent.id;
 
             try {
-                // Get the checkout session associated with this failed payment
                 const sessions = await stripeInstance.checkout.sessions.list({
                     payment_intent: paymentIntentId,
                     limit: 1
                 });
 
                 if (sessions.data.length > 0) {
-                    const { orderId } = sessions.data[0].metadata;
-                    // Delete the order since payment failed
-                    await Order.findByIdAndDelete(orderId);
-                    console.log(`Order ${orderId} deleted due to failed payment`);
+                    const { orderId } = sessions.data[0].metadata || {};
+                    if (orderId) {
+                        await Order.findByIdAndDelete(orderId);
+                        console.log(`❌ Order ${orderId} deleted due to failed payment.`);
+                    }
                 }
             } catch (error) {
-                console.error("Payment intent failed processing error:", error.message);
+                console.error("Error processing payment_intent.failed:", error.message);
             }
             break;
         }
-        
+
         default:
-            // Ignore all other event types
-            console.log(`Ignoring event type: ${event.type}`);
+            console.log(`Ignoring unhandled event type: ${event.type}`);
             break;
     }
-    
+
     return res.json({ received: true });
-}
+};
+
 
 
 
