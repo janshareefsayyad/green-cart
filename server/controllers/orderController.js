@@ -72,6 +72,7 @@ export const placeOrderStripe = async(req,res) =>{
             amount,
             address,
             paymentType: "Online",
+            isPaid:true
         });
 
         //Stripe gateway initialize
@@ -82,7 +83,7 @@ export const placeOrderStripe = async(req,res) =>{
         const line_items = productData.map((item)=>{
             return {
                 price_data: {
-                    currency :'usd',
+                    currency :'inr',
                     product_data:{
                         name : item.name,
                     },
@@ -102,13 +103,6 @@ export const placeOrderStripe = async(req,res) =>{
                 userId,
             }
         })
-        try {
-                await Order.findByIdAndUpdate(orderId, { isPaid: true });
-
-                await User.findByIdAndUpdate(userId, { cartItems: {} });
-            } catch (error) {
-                console.error("Webhook DB Update Error:", error.message);
-            }
 
         return res.json({success:true,url:session.url});
     } catch (error) {
