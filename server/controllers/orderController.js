@@ -82,25 +82,15 @@ export const placeOrderStripe = async(req,res) =>{
         const line_items = productData.map((item)=>{
             return {
                 price_data: {
-                    currency :'inr',
+                    currency :'usd',
                     product_data:{
                         name : item.name,
                     },
-                    unit_amount:item.price*100,
+                    unit_amount:Math.floor(item.price * 1.02)*100,
                 },
                 quantity: item.quantity,
             }
         })
-        line_items.push({
-    price_data: {
-        currency: 'inr',
-        product_data: {
-            name: 'Tax (2%)',
-        },
-        unit_amount: (amount*0.02)* 100,
-    },
-    quantity: 1
-});
         //create session
         const session = await stripeInstance.checkout.sessions.create({
             line_items,
@@ -190,7 +180,7 @@ export const stripeWebHooks = async(req,res) =>{
         }
          
     }
-    res.json({received:true});  
+    response.json({received:true});  
 
 }
 

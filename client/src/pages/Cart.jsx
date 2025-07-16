@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { assets} from "../assets/assets";
+import { assets, dummyAddress } from "../assets/assets";
 import toast from "react-hot-toast";
 
 const Cart = () => {
@@ -41,7 +41,7 @@ const Cart = () => {
         if(data.addresses.length > 0){
           setSelectedAdress(data.addresses[0]);
         }else{
-          toast.error(data.message);
+          //toast.error(data.message);
         }
       }
     } catch (error) {
@@ -214,7 +214,7 @@ const Cart = () => {
             </button>
             {showAddress && (
               <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-                {addresses.map((address) => (
+                {addresses.map((address, index) => (
                   <p
                     onClick={() => {
                       setShowAddress(false);
@@ -227,13 +227,7 @@ const Cart = () => {
                   </p>
                 ))}
                 <p
-                  onClick={() => {
-                    if(!user){
-                      toast.error("Please login to add address");
-                    }else{
-                      navigate("/add-address");
-                    }
-                    }}
+                  onClick={() => navigate("/add-address")}
                   className="text-primary text-center cursor-pointer p-2 hover:bg-primary/10"
                 >
                   Add address
