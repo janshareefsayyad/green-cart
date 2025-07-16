@@ -32,7 +32,7 @@ app.use((req, res, next) => {
   }
 });
 app.use(cookieParser());
-app.use(cors({origin: allowedOrigins,credentials:true}));
+// app.use(cors({origin: allowedOrigins,credentials:true}));
 
 app.post("/stripe",express.raw({type:'application/json'}),stripeWebHooks)
 
