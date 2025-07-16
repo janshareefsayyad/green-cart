@@ -21,16 +21,8 @@ await connectCloudinary();
 //Allow multiple Origins
 const allowedOrigins = ['http://localhost:5173',process.env.CLIENT_ORIGIN];
 
-//Middleware Configuration
-app.use((req, res, next) => {
-  if (req.originalUrl === '/stripe') {
-    // Don't parse webhook requests as JSON
-    next();
-  } else {
-    // Parse all other requests as JSON
-    express.json()(req, res, next);
-  }
-});
+app.use(express.json());
+
 app.use(cookieParser());
 app.use(cors({origin: allowedOrigins,credentials:true}));
 
