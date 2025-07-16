@@ -86,11 +86,21 @@ export const placeOrderStripe = async(req,res) =>{
                     product_data:{
                         name : item.name,
                     },
-                    unit_amount:Math.floor(item.price * 1.02)*100,
+                    unit_amount:item.price*100,
                 },
                 quantity: item.quantity,
             }
         })
+        line_items.push({
+    price_data: {
+        currency: 'inr',
+        product_data: {
+            name: 'Tax (2%)',
+        },
+        unit_amount: (amount*0.02)* 100,
+    },
+    quantity: 1
+});
         //create session
         const session = await stripeInstance.checkout.sessions.create({
             line_items,
